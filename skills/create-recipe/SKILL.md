@@ -11,8 +11,8 @@ Validate the shell environment before doing anything.
 - Ensure `rattler-build` exists in the shell environment
 - Ensure `python` exists in the shell environment
 - Ensure `gh` exists in the shell environment, and that the user is logged in (`gh auth status`)
-- Ensure `.kiro/skills/create-recipe/assets/recipe.yaml` exists
-- Ensure `.kiro/skills/create-recipe/assets/get_build_deps.py` exists
+- Ensure `../assets/recipe.yaml` exists
+- Ensure `../assets/get_build_deps.py` exists
 
 This skill works for **any PyPI package**, not just Jupyter AI packages.
 
