@@ -18,6 +18,10 @@ a protected branch (`main`, `master`, `mainline`, `beta-braveheart`).
 - Ensure `git` exists and you are inside (or can clone) the target repo.
 - Ensure `gh` exists and the user is logged in (`gh auth status`).
 - The working tree is clean (`git status`).
+- The branch name MUST be provided explicitly — either by the user or by the
+  calling skill (e.g. `create-prerelease-branches` passes `rc` / `dev`).
+  **Never invent a branch name.** If no name is given, ask the user for one
+  before doing anything.
 
 # Why an empty commit is required
 
@@ -58,8 +62,9 @@ base="${base:-$(git remote show origin | sed -n 's/.*HEAD branch: //p')}"
 
 ## Step 3: Create the branch
 
-Remember the requested branch name as `$branch`. **Refuse** if `$branch` is
-`main`, `master`, `mainline`, or `beta-braveheart`.
+Use the branch name provided by the user or calling skill as `$branch` — never
+make one up. **Refuse** if `$branch` is `main`, `master`, `mainline`, or
+`beta-braveheart`.
 
 ```bash
 git switch -c "$branch" "origin/$base"

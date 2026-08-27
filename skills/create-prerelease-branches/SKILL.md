@@ -69,7 +69,19 @@ the user before committing.
 
 # Steps
 
-Do the following **for each `<kind>` in `rc` then `dev`**.
+## Step 0: Determine the feedstock(s)
+
+The agent MUST know which feedstock(s) to operate on before doing anything.
+**Never guess or infer the feedstock from context** — ask the user for the
+explicit feedstock name(s) (e.g. `jupyter-ai-persona-manager-feedstock`,
+`jupyter-chat-feedstock`) if they were not given.
+
+This skill can set up several feedstocks in one go — for example, the whole
+Jupyter AI family. When multiple feedstocks are named, run every step below
+(Steps 1–8, for both `rc` and `dev`) independently for each feedstock.
+
+Then, **for each feedstock**, do the following **for each `<kind>` in `rc` then
+`dev`**.
 
 ## Step 1: Enter the feedstock
 
