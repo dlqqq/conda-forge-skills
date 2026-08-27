@@ -30,6 +30,20 @@ is merged later.
 
 - Follow the [`create-branch`](../create-branch) skill for the branch-creation
   step below.
+- Ensure a **fork** of the feedstock exists and is available as the git remote
+  `fork` (tracking the current user's GitHub account). Create it if missing:
+
+  ```bash
+  gh repo fork conda-forge/<feedstock> --remote --remote-name fork
+  ```
+
+> ⚠️ **CRITICAL — never push a channel-configured branch to `origin`.**
+> A push (not a PR) to any branch of a conda-forge feedstock that carries
+> `channel_targets` triggers a build **and an upload** to those labels on the
+> push event. The `setup-<kind>` working branch carries the channel config, so
+> it MUST be pushed to your **fork**, and the PR opened from the fork. Only the
+> empty, CI-skipped `<kind>` base branch (from `create-branch`) may be pushed to
+> `origin` — it has the skip tokens, so it never builds or uploads.
 
 # Label logic
 
@@ -118,22 +132,27 @@ conda smithy rerender -c auto
 
 Stage the recipe change and all rerender output.
 
-## Step 6: Commit and push the working branch
+## Step 6: Commit and push the working branch to your FORK
 
 ```bash
 git commit -m "Set up <kind> pre-release channels"
 ```
 
-`git push` MUST be a standalone command (sandbox policy blocks compound
-commands containing `git push`):
+Push the working branch to your **fork** — NOT `origin`. Pushing it to
+`origin` would trigger a build+upload to the labels on the push event (see the
+warning in Pre-requisites). `git push` MUST be a standalone command (sandbox
+policy blocks compound commands containing `git push`):
 
 ```bash
-git push -u origin "setup-<kind>"
+git push -u fork "setup-<kind>"
 ```
 
-## Step 7: Open the setup PR
+## Step 7: Open the setup PR (from the fork)
 
-Open a PR with **base = `<kind>`** and **head = `setup-<kind>`**.
+Open a PR whose **head is the fork branch** and whose **base is the `<kind>`
+branch on `origin`**. A PR from a fork runs CI via the `pull_request` event,
+which builds but does **not** upload — so no label upload happens until a real
+version-bump PR is merged into the `<kind>` branch.
 
 The PR **title MUST contain the skip tokens**. These feedstock PRs are
 squash-merged, and the squash commit message is the PR title — without the
@@ -144,7 +163,7 @@ pre-release. Exact spelling matters:
 gh pr create \
   --repo conda-forge/<feedstock> \
   --base "<kind>" \
-  --head "setup-<kind>" \
+  --head "<your-github-username>:setup-<kind>" \
   --title "Set up <kind> pre-release channels [ci skip] ***NO_CI***"
 ```
 
@@ -172,3 +191,8 @@ conda install -c conda-forge/label/jupyter-ai_<kind> -c conda-forge <package>
   multiple `channel_targets` uploads the artifact to EACH label (the uploader
   loops over every `channel_targets` entry).
 - Do not set repo-local git identity; inherit the global config.
+- NEVER push the `setup-<kind>` (or any channel-configured) branch to a
+  feedstock `origin` — a branch push with `channel_targets` uploads to those
+  labels on the push event. Always push PR head branches to your fork and open
+  the PR from the fork. Only the empty, skip-token `<kind>` base branch goes to
+  `origin`.
