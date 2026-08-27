@@ -13,6 +13,13 @@ must be pushed to `origin` to exist at all. So this skill pushes directly to
 `origin`. It only ever creates a **new feature branch**; it must never push to
 a protected branch (`main`, `master`, `mainline`, `beta-braveheart`).
 
+> ⚠️ This skill is for **CI-inert** branches only — its tip is an empty commit
+> carrying skip tokens, so pushing to `origin` never builds or uploads. Do NOT
+> use it (or any direct `origin` push) for a branch that carries recipe
+> `channel_targets`: on a conda-forge feedstock, a push to a channel-configured
+> branch uploads to those labels on the push event. Such branches (e.g. a
+> pre-release `setup-*` branch) must be pushed to your fork and PR'd from there.
+
 # Pre-requisites
 
 - Ensure `git` exists and you are inside (or can clone) the target repo.
