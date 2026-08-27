@@ -1,6 +1,6 @@
-# skills
+# conda-forge-skills
 
-A collection of agent skills.
+A collection of agent skills for creating and updating Conda Forge feedstocks. Mainly focused on re-distributions of PyPI packages.
 
 ## Skills
 
