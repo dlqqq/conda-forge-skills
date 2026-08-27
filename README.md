@@ -5,3 +5,5 @@ A collection of agent skills for creating and updating Conda Forge feedstocks. M
 ## Skills
 
 - [`create-recipe`](skills/create-recipe) — Create a new v1 recipe for a PyPI package and open it as a PR on `conda-forge/staged-recipes`.
+- [`create-branch`](skills/create-branch) — Push a new, named branch to `origin` without triggering CI. Used as a building block by other skills.
+- [`create-prerelease-branches`](skills/create-prerelease-branches) — Stand up CFEP-05 `rc` and `dev` pre-release branches on a feedstock, wiring channel sources/targets and rerendering, without triggering CI.
