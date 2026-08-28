@@ -8,3 +8,7 @@ A collection of agent skills for creating and updating Conda Forge feedstocks. M
 - [`create-branch`](skills/create-branch) — Push a new, named branch to `origin` without triggering CI. Used as a building block by other skills.
 - [`create-prerelease-branches`](skills/create-prerelease-branches) — Stand up CFEP-05 `rc` and `dev` pre-release branches on a feedstock, wiring channel sources/targets and rerendering, without triggering CI.
 - [`open-feedstock-pr`](skills/open-feedstock-pr) — Stage a new package version (stable or pre-release) for release by opening a version-bump PR from your fork onto the correct branch (`main`/`rc`/`dev`), rerendered with the latest `conda-smithy`.
+
+## References
+
+- [Feedstock channel strategy](docs/channel-strategy.md) — how the Jupyter AI family uses `main`/`rc`/`dev` branch channel sources & targets (incl. the `jupyter-ai_stable`/`_rc`/`_dev` labels) to publish inter-dependent serial releases at label speed instead of waiting on the `main`-channel propagation delay.
