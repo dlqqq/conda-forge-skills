@@ -159,6 +159,15 @@ gh pr create \
   --title "<pkg> v<version>"
 ```
 
+**PR title convention:** `<package-name> v<version>` — and append
+`-<build-number>` **only when the build number is not 0** (i.e. a rebuild of an
+already-released version). So:
+
+- New version (build number `0`): `jupyter-ai v3.2.0rc0`
+- Rebuild of the same version (build number `1`): `jupyter-ai v3.2.0rc0-1`
+
+(The `-<N>` suffix is omitted for the common `build: 0` case.)
+
 Do **NOT** put `[ci skip]` / `***NO_CI***` in this PR — this is a real release
 that must build. Merging it into `<branch>` publishes `<version>` to that
 branch's channel/label (main channel for `main`; the `_rc` / `_dev` label for

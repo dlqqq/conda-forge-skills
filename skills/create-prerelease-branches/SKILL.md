@@ -181,6 +181,36 @@ Reply with both PR URLs and the consumer install command, e.g.:
 conda install -c conda-forge/label/jupyter-ai_<kind> -c conda-forge <package>
 ```
 
+## Step 9: Merge (squash — the merge commit message MUST carry the skip tokens)
+
+When you merge a setup PR, the merge lands a commit **on the `<kind>` branch**,
+which is a push to a branch that now carries `channel_targets`. If that commit
+message does **not** contain the skip tokens, CI runs on the push and
+**builds + uploads the current stable version to the label prematurely**. So the
+tokens must be in the **squash commit message**, not merely the PR title.
+
+The PR title already contains `[ci skip] ***NO_CI***`, and a squash merge uses
+the PR title as the default commit subject — but do **not** rely on that
+default (a repo's squash-message setting, or a maintainer editing the subject,
+can drop it). Pass the commit message **explicitly** so it is guaranteed:
+
+```bash
+gh pr merge <n> \
+  --repo conda-forge/<feedstock> \
+  --squash --delete-branch \
+  -t "Set up <kind> pre-release channels [ci skip] ***NO_CI***" \
+  -b ""
+```
+
+Notes:
+- GitHub may append ` (#<n>)` to the subject — harmless; the skip tokens still
+  take effect because CI matches them **anywhere** in the commit message.
+- After merging, confirm no build was triggered on the `<kind>` branch:
+  `gh run list --repo conda-forge/<feedstock> --branch <kind> --limit 3`
+  should show no new run for the merge commit.
+- The first real build/upload happens later, on the version-bump PR
+  (`open-feedstock-pr`), which deliberately has **no** skip tokens.
+
 # Notes and gotchas
 
 - Skip tokens must be exact: `[ci skip]` (GitHub Actions) and `***NO_CI***`
